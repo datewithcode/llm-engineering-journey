@@ -46,3 +46,41 @@ messages = [
 ]
 response = openai.chat.completions.create(model=MODEL,messages=messages)
 print(response.choices[0].message.content)
+
+price_function = {
+    "name":"get_ticket_price",
+    "description": "Fetch the price for destination city",
+    "parameters":{
+        "type": "object",
+        "properties": {
+            "destination_city":{"type":"string","description":"The city the customer wants to fly to"},
+        },
+        "required": ["destination_city"]
+    },
+
+}
+tools = [{"type":"function","function":price_function}]
+print(tools)
+
+messages = [
+    {"role":"system", "content":system_message},
+    {"role":"user","content":"How much is a ticket to tokyo"},
+]
+response = openai.chat.completions.create(model=MODEL,messages=messages,tools=tools)
+print("Finish: ", response.choices[0].message.content)
+print("tool calls: ",response.choices[0].finish_reason == 'tool_calls')
+print("job:",response.choices[0].message.tool_calls)
+
+tool_call = response.choices[0].message.tool_calls[0]
+arguments = json.loads(tool_call.function.arguments)
+city = arguments["destination_city"]
+result = get_ticket_price(city)
+print('results:', result)
+messages.append(response.choices[0].message)
+messages.append({
+    "role":"tool",
+    "content": result,
+    "tool_call_id":tool_call.id,
+})
+response = openai.chat.completions.create(model=MODEL,messages=messages)
+print("answer", response.choices[0].message.content)
