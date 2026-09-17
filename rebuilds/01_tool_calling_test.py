@@ -67,17 +67,19 @@ messages_tools = [
 response_tool = openai.chat.completions.create(model=MODEL,messages=messages_tools,tools=tools)
 # print(response_tool.choices[0])
 # print(response_tool.choices[0].finish_reason == 'tool_calls')
-tool_call = response_tool.choices[0].message.tool_calls[0]
-arguments = json.loads(tool_call.function.arguments)
-city = arguments['destination_city']
-result = get_price_ticket(city)
-
+print(response_tool.choices[0].message.tool_calls[0])
+job_id = response_tool.choices[0].message.tool_calls[0].id
+print(job_id)
+get_city = response_tool.choices[0].message.tool_calls[0].function.arguments
+get_city_dict = json.loads(get_city)
+city_value = get_price_ticket(get_city_dict['destination_city'])
+print(city_value)
+print(response_tool.choices[0].message)
 messages_tools.append(response_tool.choices[0].message)
 messages_tools.append({
-    "role":"tool",
-    "content": result,
-    "tool_call_id":tool_call.id,
+    "role": "tool",
+    "content": city_value,
+    "tool_call_id": job_id,
 })
-
-response = openai.chat.completions.create(model=MODEL,messages=messages_tools)
-print("answer", response.choices[0].message.content)
+final_result = openai.chat.completions.create(model=MODEL,messages=messages_tools)
+print('response-> ', final_result.choices[0].message.content)
