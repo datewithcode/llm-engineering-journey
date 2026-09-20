@@ -34,7 +34,7 @@ Delete the file. Rebuild from a blank file — no hints — timed. Target: befor
 **Mode:** blank file, no AI, no old files open. **One lookup:** the tools-menu bracket shape
 (note 25) — always classed as look-up-level. Wrote the flow as comments first, from memory,
 before any code.
-**Time taken:** ____ (fill in)
+**Time taken:** ~45 minutes, including debugging
 
 ### Written from memory, no help
 Client + `base_url` + `MODEL` · price dict and `get_price_ticket` with `.lower()` and a
