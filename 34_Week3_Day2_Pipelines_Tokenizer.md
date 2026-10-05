@@ -3,6 +3,7 @@
 
 > Personal study notes. The tokenizer section connects directly to Week 1's dictionary picture.
 > Notebook: week3/day2.ipynb (Colab)
+> **Accuracy note:** the pipelines section matches the Week 3 Day 2 lecture. The tokenizer and special-token sections are a **preview**: the lecturer actually teaches tokenizers in Week 3 Day 3 (files 37, 39, 40). The concepts are correct; just know where they came from. Read file 34b first for the full Day 2 lecture.
 
 ---
 
@@ -46,24 +47,13 @@ One line. Behind the scenes, the pipeline:
 
 You didn't choose the model, load it, or handle tokens. The pipeline did everything.
 
-### Batch processing
+### Batch processing (extra explanation, not shown in the lecture)
 
-```python
-results = classifier(["I love this!", "This is terrible!", "It's okay I guess"])
-# → [POSITIVE 0.99, NEGATIVE 0.99, NEGATIVE 0.82]
-```
+You can pass a list of inputs and get a list of results back, one per input.
 
-Pass a list, get a list back. The "It's okay" being classified as negative with 0.82 confidence shows the model isn't perfect — arguably "okay" is neutral, not negative.
+### Other pipeline tasks
 
-### Real-world use case
-
-Sentiment analysis on Yelp/Amazon reviews = a billion-dollar business problem. Companies need to process millions of reviews to understand customer satisfaction. This pipeline does it in one line.
-
-### Other pipeline tasks (examples from the lecture)
-
-- `pipeline("text-generation")` — generate text (you'll use this)
-- `pipeline("image-to-text")` — describe an image
-- `pipeline("text-to-speech")` — generate audio (yesterday's demo)
+The full set the lecturer actually ran (NER, question answering, summarization, translation, zero-shot classification, GPT-2 text generation, image generation, text-to-speech) is in **file 34b**.
 
 ---
 

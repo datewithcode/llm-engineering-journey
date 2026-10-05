@@ -3,6 +3,7 @@
 
 > Personal study notes. This connects Week 1's "three roles" to the actual tokens the model sees.
 > Notebook: week3/day2.ipynb (Colab)
+> **Accuracy note:** the lecturer covers `apply_chat_template` in **Week 3 Day 3** (not Day 2). The content here matches that lecture. Section 5 below adds the parts of it that were missing.
 
 ---
 
@@ -142,6 +143,37 @@ That's another reason the tokenizer must match the model:
 - Wrong tokenizer → wrong markers → model doesn't know where roles start and end → garbage output
 
 When you write `AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-1B")`, you get Llama's markers. A different model name gives different markers. `Auto` handles this automatically.
+
+---
+
+## 4b. What the Lecture Actually Showed (Week 3 Day 3)
+
+### The instruct model has its own tokenizer
+He loads the tokenizer for `meta-llama/Llama-3.1-8B-Instruct` (note the `-Instruct` suffix). The instruct variant's tokenizer has **extra special tokens** for roles, which the base model's tokenizer doesn't need. Instruct (also called "chat") variants are the ones fine-tuned on system/user/assistant conversations. Hugging Face names more often say "Instruct" than "chat."
+
+### Llama's template inserts dates you didn't write
+When he ran `apply_chat_template(messages, tokenize=False)` on a system message plus "Tell a light-hearted joke for a room of data scientists," the output included lines he never wrote:
+```
+Cutting Knowledge Date: December 2023
+Today Date: ...
+```
+Llama's chat template automatically adds a knowledge cutoff date and a "today" date into the system section. Different templates add different things.
+
+### The eureka moment (the lecturer's words, paraphrased)
+It can feel as though the list of dicts is something the neural network understands, as if it has a slot for the system prompt and a slot for the user prompt. **It doesn't.** A model takes **one sequence of numbers** and predicts the next number. The template flattens your dicts into one sequence with special tokens marking "system starts / ends, user starts / ends, assistant starts." The template ends with the assistant header, so the most likely continuation is an assistant-style reply.
+
+**WHY the model respects those markers:** not because of anything built into the network, but because huge amounts of training data were formatted exactly this way (file 37, the puppy and the bell).
+
+### Templates look completely different across models
+From the lecturer's comparison of four models' templates for the same messages:
+
+| Model | What its template looks like |
+|---|---|
+| Llama 3.1 | `<\|begin_of_text\|>`, role headers with start/end markers, inserted date lines |
+| Phi-4 (Microsoft) | Much simpler: short markers for system, end, user, assistant |
+| DeepSeek 3.1 | A beginning-of-sentence token, then user and assistant markers, arranged differently |
+
+**All that matters is that each model saw its own format consistently during training.** More detail on comparing tokenizers is in file 40.
 
 ---
 

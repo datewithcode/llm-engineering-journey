@@ -3,6 +3,7 @@
 
 > Personal study notes. This completes the full pipeline: dicts → template → tokens → model → output → text.
 > Notebook: week3/day2.ipynb (Colab)
+> **Accuracy note:** the lecturer covers loading models, quantization, and `model.generate` in **Week 3 Day 4** (see files 42, 43, 44 for the lecture's own examples). The concepts here are correct, written as a preview.
 
 ---
 

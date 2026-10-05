@@ -101,6 +101,40 @@ OpenAI's tokenizer page: platform.openai.com/tokenizer. Type text and watch it s
 
 ---
 
+## 5b. Extra Depth (from an external course, not Ed Donner)
+
+### Why not just use single characters as tokens?
+
+It's possible, and nothing is ever "unknown" that way. But three problems:
+
+| Problem | Explanation |
+|---|---|
+| **Too many characters, always growing** | Unicode has 150,000+ characters (every language, emoji, currency symbol) and adds more over time. Every change would mean retraining the model. |
+| **Ignores language patterns** | In English, "h" often follows "t" or "w," rarely "q" or "x." Word-level chunks capture these patterns for free. Characters force the model to learn them from scratch. |
+| **Wastes the context window** | With a 1,000-token window: character tokens ≈ 200 words (one paragraph). Word/subword tokens ≈ 800 words. Four times more text fits. |
+
+**WHY this matters:** it explains why every modern model uses subword tokens (BPE, file 40), a middle ground between characters and whole words.
+
+### The trade-off in vocabulary size
+
+| Fewer tokens (small vocabulary) | More tokens (large vocabulary) |
+|---|---|
+| Less memory | More memory |
+| Handles rare and new words well | Packs more meaning into each token |
+| Less efficient, text uses more tokens | Fits longer documents in the context window |
+| Weaker at long-range patterns | Needs more training data and compute |
+
+### Tokenizers depend on their training text
+
+A tokenizer is built from the text it was trained on (via BPE). So:
+- A tokenizer built from **tweets** splits text differently from one built from **medical journals**
+- Languages with **less text online** get worse tokenizers (more splitting, less efficient)
+- A company's **goal** shapes it: a chatbot tokenizer may differ from one built for classifying documents
+
+**WHY this matters:** it's another reason the tokenizer must match the model, and why the same sentence costs different numbers of tokens on different models.
+
+---
+
 ## 6. One-Line Recap
 
 1. Letters = too small (model learns too slowly). Words = too many (rare ones left out). Tokens = the efficient middle: small dictionary, nothing unknown.

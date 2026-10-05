@@ -80,12 +80,33 @@
 | HF token as Colab Secret, `!` shell commands | 32_Week3_Day1_Colab_Setup.md |
 | Diffusion models, inference steps, GPU memory, cost per image | 33_Week3_Day1_Running_Models.md |
 | **Pipelines** (the easy way) | 34_Week3_Day2_Pipelines_Tokenizer.md |
+| **Pipeline tasks**: NER, question answering, summarization, translation, zero-shot, GPT-2 | 34b_Week3_Day2_Pipeline_Tasks.md |
+| Colab tips: chatty warnings, the misleading "CUDA is required" error | 34b_Week3_Day2_Pipeline_Tasks.md |
+| Why small specialized models vs frontier models | 34b_Week3_Day2_Pipeline_Tasks.md |
+| **Quantization** dimmer switch, NF4 parking spaces, tensors, autoregressive | 42_Week3_Day4_Distillation_Memory.md |
+| Comparing tokenizers across Llama, Phi-4, DeepSeek, Qwen Coder | 40_Week3_Day3_Vocabulary_BPE.md |
 | **AutoTokenizer**, encode/decode, special tokens BOS/EOS | 34_Week3_Day2_Pipelines_Tokenizer.md |
 | **apply_chat_template**, how roles become tokens | 35_Week3_Day2_Chat_Template.md |
 | tokenize=True vs False vs return_tensors="pt" | 35_Week3_Day2_Chat_Template.md, 36_Week3_Day2_Loading_Models.md |
 | **AutoModelForCausalLM**, "causal" meaning | 36_Week3_Day2_Loading_Models.md |
 | **Quantization** (4-bit, 8-bit, BitsAndBytes) | 36_Week3_Day2_Loading_Models.md |
 | **model.generate**, the complete pipeline dicts → text | 36_Week3_Day2_Loading_Models.md |
+| **Why special tokens work** (learned, not wired; puppy and bell) | 37_Week3_Day2_Special_Tokens_Insight.md |
+| Output slicing, **base vs instruct** seen live, Phi-4 | 38_Week3_Day2_Running_Llama.md |
+| Gated models (Meta terms of service), batch_decode | 39_Week3_Day3_Gated_Models_BatchDecode.md |
+| Vocabulary structure, **BPE** (how the dictionary is built) | 40_Week3_Day3_Vocabulary_BPE.md |
+| **Temperature and top_p** (ice cream shop) | 41_Week3_Day3_Temperature_TopP.md |
+| **Distillation**, quantization in practice, GPU memory cleanup, `<think>` tags | 42_Week3_Day4_Distillation_Memory.md |
+| **Model architecture**: embedding, layers, LM head; vectors; 2D animal map | 43_Week3_Day4_Model_Architecture.md |
+| Inside a decoder layer: attention Q/K/V/O, MLP, **non-linearity**, TextStreamer | 44_Week3_Day4_Decoder_Internals.md |
+| **Watching token prediction live** (logprobs, "blue is the cool...") | 45_Week3_Day5_Inference_Visualization.md |
+| Meeting minutes project, Google Drive in Colab, **Whisper** speech-to-text | 46_Week3_Day5_Meeting_Minutes.md |
+| **Which LLM is best?** (wrong question), 12 basic properties, speed vs latency, Chinchilla | 47_Week4_Day1_Selecting_Models.md |
+| **Six hard benchmarks** and seven limitations; Connect Four | 48_Week4_Day1_Benchmarks.md |
+| **Five leaderboards**, Intelligence Index, where recent gains come from | 49_Week4_Day2_Leaderboards.md |
+| **Business problem first**, two hats, five steps, Python-to-C++ setup | 50_Week4_Day3_Business_Problem_Code_Porting.md |
+| Porting code with GPT-5, `exec`, fence stripping, **4-model results (Gemini won)** | 51_Week4_Day3_Porting_Code_Results.md |
+| **RAG small idea** (open-book exam), Insurellm, toy RAG code, LLM positivity bias | 52_Week5_Day1_RAG_Small_Idea.md |
 | Ed Donner's six courses | 90_REF_Ed_Donner_Course_Curriculum.md |
 
 ---
@@ -147,8 +168,40 @@ Each file builds on the one before. Read in this order the first time. After tha
 | 32 | 32_Week3_Day1_Colab_Setup.md | HF token as Colab Secret, `!` shell commands, diffusion vs transformer | Step 31 |
 | 33 | 33_Week3_Day1_Running_Models.md | Running models on T4 and A100, diffusion steps, memory management, cost | Step 32 |
 | 34 | 34_Week3_Day2_Pipelines_Tokenizer.md | **Pipelines** (easy way), **AutoTokenizer** (week 1 dictionary, alive), special tokens BOS/EOS | Steps 7, 30 |
+| 34b | 34b_Week3_Day2_Pipeline_Tasks.md | **The actual Day 2 lecture**: pipeline pattern, eight tasks, Colab tips (read before 34) | Step 30 |
 | 35 | 35_Week3_Day2_Chat_Template.md | **apply_chat_template**: how roles become tokens, tokenize=True vs False | Steps 9, 34 |
 | 36 | 36_Week3_Day2_Loading_Models.md | **AutoModelForCausalLM**, quantization, model.generate, the complete pipeline | Steps 34, 35 |
+| 37 | 37_Week3_Day2_Special_Tokens_Insight.md | Why special tokens work: learned, not wired (puppy and bell) | Step 34 |
+| 38 | 38_Week3_Day2_Running_Llama.md | Output slicing, base vs instruct seen live, Phi-4 | Step 36 |
+| 39 | 39_Week3_Day3_Gated_Models_BatchDecode.md | Gated models, Meta terms of service, batch_decode | Step 34 |
+| 40 | 40_Week3_Day3_Vocabulary_BPE.md | Vocabulary structure, BPE merge algorithm | Steps 7, 39 |
+| 41 | 41_Week3_Day3_Temperature_TopP.md | **Temperature and top_p** (ice cream shop) | Step 36 |
+| 42 | 42_Week3_Day4_Distillation_Memory.md | Distillation, quantization recipe, memory cleanup, `<think>` tags | Step 36 |
+| 43 | 43_Week3_Day4_Model_Architecture.md | **Three-station factory**: embedding, layers, LM head; vectors; 2D animal map | Steps 36, 40 |
+| 44 | 44_Week3_Day4_Decoder_Internals.md | Attention Q/K/V/O, MLP, non-linearity (the filter), TextStreamer | Step 43 |
+| 45 | 45_Week3_Day5_Inference_Visualization.md | Watching token prediction live with logprobs | Steps 41, 43 |
+| 46 | 46_Week3_Day5_Meeting_Minutes.md | Meeting minutes project, Whisper, Google Drive, week 3 wrap-up | Steps 42, 44 |
+
+### Week 4: Choosing the right model
+
+| Step | File | What you learn | Depends on |
+|---|---|---|---|
+| 47 | 47_Week4_Day1_Selecting_Models.md | "Best LLM" is the wrong question; 12 basic properties; speed vs latency; Chinchilla | Step 6 |
+| 48 | 48_Week4_Day1_Benchmarks.md | Six hard benchmarks, seven limitations, Connect Four | Step 47 |
+| 49 | 49_Week4_Day2_Leaderboards.md | Five leaderboards, Intelligence Index, training vs inference gains | Step 48 |
+| 50 | 50_Week4_Day3_Business_Problem_Code_Porting.md | **Business problem first**, two hats, five steps, project setup | Step 49 |
+| 51 | 51_Week4_Day3_Porting_Code_Results.md | Porting Python to C++; four models compared; Gemini won | Step 50 |
+
+> **Skipped for now:** the rest of Week 4 Day 2 (other leaderboards, real-world use cases, choosing a model for a project), and Week 4 Days 4 and 5. Intentionally skipped to move on to Week 5. Come back to them later if needed.
+
+### Week 5: RAG
+
+| Step | File | What you learn | Depends on |
+|---|---|---|---|
+| 52 | 52_Week5_Day1_RAG_Small_Idea.md | **RAG small idea** (open-book exam), Insurellm, toy RAG code piece by piece | Steps 23, 43 |
+
+### Accuracy check (done after week 5 day 1)
+Week 3 notes were checked against the lecture transcripts. Missing lecture content was added (file 34b; sections in 35, 40, 42), invented demo details were removed (files 34, 38, 40, 42), and files whose content comes from a different day than their name have an **Accuracy note** at the top. Anything marked *extra explanation* is correct but not from the lecture.
 
 ### Every concept file has a "How to Explain This to Someone" section
 Four parts, always the same shape: non-technical explanation, technical explanation, the analogy, and a one-liner. Use it when someone asks you about a concept — open the file, find that section, read it out.
@@ -191,3 +244,18 @@ If a concept feels fuzzy, these are the pictures that worked:
 | Tools | Boss locked in an office (LLM) and secretary outside (your code) |
 | Prompt caching | Unchanging content first, changing content last |
 | Structured prompt | Film script with labelled lines, not role/content dicts |
+| Ollama vs Hugging Face | Sealed vending machine vs walking into the factory |
+| GPU vs CPU | 8,000 people with calculators vs one professor (same accuracy, far faster) |
+| NF4 quantization | 16 parking spaces placed where the cars actually park |
+| Chat template | A screenplay with labelled speakers; the model writes the next line |
+| Special tokens | Puppy trained to a bell: learned from repetition, not wired in |
+| Temperature / top_p | Ice cream shop: how adventurous you are / which flavours are on the menu |
+| Distillation | Professor trains an apprentice |
+| Model architecture | Three-station factory: word to profile, refine 16 times, pick next word |
+| Embeddings | 2D animal map: dog and cat close, hippo far away |
+| Non-linearity | The filter between layers; zero means "ignore this signal" |
+| Token-by-token inference | Pulling back the Wizard of Oz curtain |
+| Choosing a model | Choosing a car: depends on the job, budget, and timeline |
+| Benchmarks vs your own test | Test scores when hiring vs the actual interview |
+| Business problem first | A doctor diagnoses before prescribing |
+| RAG (week 5) | Open-book exam: your code flips to the right page for the student |
