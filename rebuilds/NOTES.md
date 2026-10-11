@@ -57,3 +57,27 @@ holding `'Tokyo'`. **Read the pile, not the code.**
 
 ### Next
 Rebuild again without the menu lookup, and with the function call in place from the start.
+
+---
+
+## 04_restart.py — Oct 11, 2026 (first session after a 3-week gap)
+
+### Written from memory
+Flow as comments first · system message · price dict and `get_price` · the message list ·
+the first call with `tools=tools` · `tool_calls[0].id` · the final print.
+
+### Looked up
+Imports and the client line · the menu's `parameters` shape · everything from `json.loads`
+to the two appends (lines 59 onwards).
+
+### The three bugs, and what each taught
+
+| Bug | What showed it | Lesson |
+|---|---|---|
+| `price_data[destination_city].lower()` lowercased the price, not the city | `KeyError: 'Tokyo'` | Clean the **input** before the lookup |
+| Menu key `'parameter'` instead of `'parameters'` | boss invented `arrival`, `date`, `departure` | No error is raised: a misspelled menu key is silently ignored, and the boss guesses |
+| `json.load(arguments['destination_city'])` | `string indices must be integers` | `arguments` is a string: `json.loads` first, index second |
+
+### Next
+Lines 59–69 (loads, run the function, the two appends) are still look-up level. Rebuild
+that block alone, from a blank file, until it needs no lookup.
