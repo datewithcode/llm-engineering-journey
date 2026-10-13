@@ -81,3 +81,25 @@ to the two appends (lines 59 onwards).
 ### Next
 Lines 59–69 (loads, run the function, the two appends) are still look-up level. Rebuild
 that block alone, from a blank file, until it needs no lookup.
+
+---
+
+## 05_toy_rag.py — Oct 13, 2026 (Week 5 Day 1 toy RAG)
+
+### Written without help
+Flow as comments · the loop over files · surname from the file name (own `split` version) ·
+`knowledge[surname] = text` · `get_relevant_context` (lowercase, split, match, collect, return) ·
+the message list · the model call and the final print.
+
+### Looked up
+`glob.glob` in a loop · `with open(...)` · the punctuation-stripping line and
+`additional_context` (both from the course notebook) · the client line.
+
+### The bugs, and what each taught
+
+| Bug | What showed it | Lesson |
+|---|---|---|
+| `.split('.')[0]` on `Jordan K. Bishop.md` | a surname of `k` | Use `Path(filename).stem`: it removes only the final extension |
+| Function printed matches but had no `return` | `None` | Collect into a list and return it |
+| `"Who is Lancaster?"` found 0 files | `lancaster?` is not the key `lancaster` | Exact word matching breaks on one character; this is what embeddings fix |
+| `.split().strip(...)` | `'list' object has no attribute 'strip'` | `split` gives a list; `strip` works on one string |
