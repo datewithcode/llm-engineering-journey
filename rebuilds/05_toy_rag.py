@@ -57,4 +57,4 @@ MODEL = 'qwen2.5:3b'
 system_message = SYSTEM_PREFIX + additional_context(question)
 messages = [{"role": "system", "content": system_message}] + [{"role": "user", "content":question}]
 response = openai.chat.completions.create(model=MODEL, messages=messages)
-print(response.choices[0].message.content)
+print(additional_context("Who is Avery?"))
